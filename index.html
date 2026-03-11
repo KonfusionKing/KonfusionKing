@@ -1,121 +1,810 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KonfusionKing | About Me</title>
-<style>
-  /* Basic Reset */
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { height: 100%; font-family: 'Arial', sans-serif; overflow: hidden; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Harry — Student & Creator</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Container for all pages */
-  #container {
-    display: flex;
-    width: 400%; /* 4 pages */
-    height: 100vh;
-    transition: transform 0.7s ease;
-  }
+    :root {
+      --bg: #f7f5f2;
+      --text: #1a1a1a;
+      --muted: #888;
+      --accent: #2d6a4f;
+      --accent2: #74c69d;
+      --card: #ffffff;
+      --border: #e8e4df;
+      --nav-h: 64px;
+    }
 
-  /* Each page */
-  .page {
-    flex: 0 0 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 2em;
-    color: #fff;
-    font-size: 1.2em;
-  }
+    html { scroll-behavior: smooth; }
 
-  /* Page backgrounds */
-  #page1 { background: #0b0b2a; }
-  #page2 { background: #1a1a2e; }
-  #page3 { background: #2b2b45; }
-  #page4 { background: #3c3c5c; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      cursor: none;
+    }
 
-  h1 { font-size: 3em; margin-bottom: 0.5em; color: #f0e130; }
-  p { max-width: 600px; text-align: center; line-height: 1.5; }
+    /* ── Custom Cursor ── */
+    .cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: transform 0.18s ease, width 0.25s, height 0.25s, border-color 0.2s;
+    }
+    body:has(a:hover) .cursor, body:has(button:hover) .cursor { width: 6px; height: 6px; }
+    body:has(a:hover) .cursor-ring, body:has(button:hover) .cursor-ring { width: 52px; height: 52px; border-color: var(--accent2); }
 
-  /* Navigation arrows */
-  .arrow {
-    position: absolute;
-    top: 50%;
-    font-size: 3em;
-    color: #f0e130;
-    cursor: pointer;
-    user-select: none;
-    transform: translateY(-50%);
-  }
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      z-index: 100;
+      background: rgba(247,245,242,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--muted);
+      text-decoration: none;
+      position: relative;
+      transition: color 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 1px;
+      background: var(--accent);
+      transition: width 0.25s ease;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover::after { width: 100%; }
 
-  #left { left: 10px; }
-  #right { right: 10px; }
+    /* ── Pages ── */
+    .page {
+      min-height: 100vh;
+      padding-top: var(--nav-h);
+      display: none;
+    }
+    .page.active { display: block; }
 
-  /* Fade-in animation for content */
-  .fade-in {
-    opacity: 0;
-    animation: fadeIn 1s forwards;
-  }
+    /* ── PAGE 1: ABOUT ── */
+    #page-about {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: var(--nav-h);
+    }
+    #page-about.active { display: flex; }
 
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
+    .hero {
+      min-height: calc(100vh - var(--nav-h));
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 80px 48px;
+      gap: 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
 
-  /* Optional swipe effect for touch devices */
-</style>
+    .hero-text { animation: fadeUp 0.9s ease both; }
+    .hero-eyebrow {
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+      font-weight: 500;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.1s both;
+    }
+    .hero-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3.5rem, 7vw, 5.5rem);
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.2s both;
+    }
+    .hero-name em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero-bio {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: #555;
+      max-width: 440px;
+      margin-bottom: 40px;
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.35s both;
+    }
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.45s both;
+    }
+    .tag {
+      padding: 7px 18px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 400;
+      transition: all 0.2s;
+      background: white;
+    }
+    .tag:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: #f0faf4;
+      transform: translateY(-2px);
+    }
+
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      animation: fadeIn 1.2s ease 0.4s both;
+    }
+
+    .avatar-card {
+      width: 340px;
+      height: 400px;
+      background: var(--card);
+      border-radius: 28px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.07);
+    }
+    .avatar-card::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, #74c69d33 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .avatar-initials {
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.5rem;
+      color: white;
+      letter-spacing: -0.02em;
+    }
+    .avatar-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+    .avatar-school {
+      font-size: 0.82rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    .avatar-location {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .avatar-divider {
+      width: 40px; height: 1px;
+      background: var(--border);
+    }
+    .avatar-interests {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 0 24px;
+    }
+    .interest-chip {
+      padding: 4px 12px;
+      background: #f0faf4;
+      color: var(--accent);
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+
+    /* floating elements */
+    .float-el {
+      position: absolute;
+      border-radius: 12px;
+      background: white;
+      border: 1px solid var(--border);
+      padding: 10px 16px;
+      font-size: 0.75rem;
+      color: var(--text);
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+      white-space: nowrap;
+    }
+    .float-el.one {
+      bottom: 30px; left: -50px;
+      animation: floatA 4s ease-in-out infinite;
+    }
+    .float-el.two {
+      top: 30px; right: -40px;
+      animation: floatB 4.5s ease-in-out infinite;
+    }
+
+    @keyframes floatA {
+      0%,100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes floatB {
+      0%,100% { transform: translateY(0px); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* ── PAGE 2: SKILLS ── */
+    #page-skills {
+      display: none;
+      padding-top: var(--nav-h);
+    }
+    #page-skills.active { display: block; }
+
+    .page-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+
+    .page-header {
+      margin-bottom: 64px;
+      animation: fadeUp 0.7s ease both;
+    }
+    .page-header-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+    .page-header h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+    .page-header p {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 300;
+      max-width: 480px;
+      line-height: 1.7;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .skill-category {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s;
+    }
+    .skill-category.visible { opacity: 1; transform: translateY(0); }
+    .skill-category:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.07); }
+
+    .skill-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+    .skill-category h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+
+    .skill-bar-wrap { margin-bottom: 14px; }
+    .skill-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .skill-bar-label span:last-child { color: var(--accent); font-weight: 500; }
+    .skill-bar-track {
+      height: 4px;
+      background: #f0f0f0;
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .skill-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 100px;
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .interests-section { margin-top: 60px; }
+    .interests-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    .interest-card {
+      flex: 1;
+      min-width: 140px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.25s;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .interest-card.visible { opacity: 1; transform: translateY(0); }
+    .interest-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.08); border-color: var(--accent2); }
+    .interest-card .icon { font-size: 2rem; margin-bottom: 10px; }
+    .interest-card p { font-size: 0.85rem; font-weight: 500; color: var(--text); }
+
+    /* ── PAGE 3: PROJECTS ── */
+    #page-projects {
+      display: none;
+      padding-top: var(--nav-h);
+    }
+    #page-projects.active { display: block; }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 0;
+    }
+
+    .project-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s;
+    }
+    .project-card.visible { opacity: 1; transform: translateY(0); }
+    .project-card:hover { box-shadow: 0 20px 50px rgba(0,0,0,0.09); transform: translateY(-4px); }
+
+    .project-thumb {
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: inherit;
+      opacity: 0.15;
+    }
+    .project-body { padding: 28px; }
+    .project-type {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .project-body h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .project-body p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.65;
+      font-weight: 300;
+    }
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .project-tag {
+      padding: 4px 12px;
+      background: #f7f5f2;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 40px 48px;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      nav { padding: 0 24px; }
+      .hero { grid-template-columns: 1fr; padding: 40px 24px; text-align: center; }
+      .hero-visual { order: -1; }
+      .avatar-card { width: 280px; height: 340px; }
+      .float-el { display: none; }
+      .hero-tags { justify-content: center; }
+      .page-inner { padding: 48px 24px; }
+      .hero-bio { max-width: 100%; }
+    }
+  </style>
 </head>
 <body>
 
-<div id="container">
-  <div class="page" id="page1">
-    <h1 class="fade-in">Hi, I’m KonfusionKing</h1>
-    <p class="fade-in" style="animation-delay:0.3s;">Welcome to my personal website. Here you’ll find a bit about me, my skills, and what I enjoy creating.</p>
-  </div>
-  <div class="page" id="page2">
-    <h1 class="fade-in">Skills</h1>
-    <p class="fade-in" style="animation-delay:0.3s;">I love coding, problem-solving, and learning new technologies. HTML, CSS, JavaScript, and Python are my favorite tools.</p>
-  </div>
-  <div class="page" id="page3">
-    <h1 class="fade-in">Projects</h1>
-    <p class="fade-in" style="animation-delay:0.3s;">I build small interactive games, websites, and tools. Each project is a chance to experiment and improve my skills.</p>
-  </div>
-  <div class="page" id="page4">
-    <h1 class="fade-in">Contact</h1>
-    <p class="fade-in" style="animation-delay:0.3s;">You can reach me via email or social links. I’m always excited to collaborate or share ideas!</p>
-  </div>
-</div>
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
-<div id="left" class="arrow">&#8592;</div>
-<div id="right" class="arrow">&#8594;</div>
+  <!-- Nav -->
+  <nav>
+    <a href="#" class="nav-logo" onclick="showPage('about')">Harry.</a>
+    <ul class="nav-links">
+      <li><a href="#" onclick="showPage('about')">About</a></li>
+      <li><a href="#" onclick="showPage('skills')">Skills</a></li>
+      <li><a href="#" onclick="showPage('projects')">Projects</a></li>
+    </ul>
+  </nav>
 
-<script>
-let currentPage = 0;
-const totalPages = 4;
-const container = document.getElementById('container');
+  <!-- ── PAGE: ABOUT ── -->
+  <section id="page-about" class="page active">
+    <div class="hero">
+      <div class="hero-text">
+        <p class="hero-eyebrow">👋 Hey there, I'm</p>
+        <h1 class="hero-name">Harry<br><em>Sujivan</em></h1>
+        <p class="hero-bio">
+          A 13-year-old student at Perth Modern School with a passion for
+          technology, creativity, and sport. I love building things — whether
+          that's writing code, sculpting 3D worlds, or scoring goals on the pitch.
+        </p>
+        <div class="hero-tags">
+          <span class="tag">💻 Coding</span>
+          <span class="tag">🎨 3D Modelling</span>
+          <span class="tag">⚽ Soccer</span>
+          <span class="tag">🏓 Table Tennis</span>
+          <span class="tag">📍 Perth, WA</span>
+        </div>
+      </div>
 
-function showPage(index) {
-    if(index < 0) index = 0;
-    if(index >= totalPages) index = totalPages - 1;
-    currentPage = index;
-    container.style.transform = `translateX(-${100 * currentPage}%)`;
-}
+      <div class="hero-visual">
+        <div class="avatar-card">
+          <div class="avatar-initials">H</div>
+          <div class="avatar-name">Harry</div>
+          <div class="avatar-school">Perth Modern School</div>
+          <div class="avatar-location">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            Perth, Western Australia
+          </div>
+          <div class="avatar-divider"></div>
+          <div class="avatar-interests">
+            <span class="interest-chip">Coding</span>
+            <span class="interest-chip">3D Art</span>
+            <span class="interest-chip">Soccer</span>
+            <span class="interest-chip">Table Tennis</span>
+          </div>
 
-document.getElementById('left').addEventListener('click', () => showPage(currentPage - 1));
-document.getElementById('right').addEventListener('click', () => showPage(currentPage + 1));
+          <div class="float-el one">🏓 Table Tennis Player</div>
+          <div class="float-el two">⚽ Soccer Enthusiast</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-/* Optional: allow swipe on mobile */
-let touchStartX = null;
+  <!-- ── PAGE: SKILLS ── -->
+  <section id="page-skills" class="page">
+    <div class="page-inner">
+      <div class="page-header">
+        <p class="page-header-eyebrow">What I know</p>
+        <h2>Skills &<br>Interests</h2>
+        <p>A snapshot of the tools, tech, and passions I'm developing as a young creator and student.</p>
+      </div>
 
-document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
-document.addEventListener('touchend', e => {
-    if(touchStartX === null) return;
-    let touchEndX = e.changedTouches[0].screenX;
-    if(touchEndX - touchStartX > 50) showPage(currentPage - 1); // swipe right
-    if(touchStartX - touchEndX > 50) showPage(currentPage + 1); // swipe left
-    touchStartX = null;
-});
-</script>
+      <div class="skills-grid">
+        <div class="skill-category" data-delay="0">
+          <div class="skill-icon">💻</div>
+          <h3>Coding</h3>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>HTML & CSS</span><span>75%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="75"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>Python</span><span>60%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="60"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>JavaScript</span><span>45%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="45"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>Scratch / Block Code</span><span>90%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="90"></div></div>
+          </div>
+        </div>
 
+        <div class="skill-category" data-delay="100">
+          <div class="skill-icon">🎨</div>
+          <h3>3D Modelling</h3>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>Blender</span><span>65%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="65"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>TinkerCAD</span><span>80%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="80"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>Texturing & Materials</span><span>50%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="50"></div></div>
+          </div>
+        </div>
+
+        <div class="skill-category" data-delay="200">
+          <div class="skill-icon">🧠</div>
+          <h3>Learning Now</h3>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>Game Development</span><span>35%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="35"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>3D Animation</span><span>30%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="30"></div></div>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-label"><span>UI / Web Design</span><span>55%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="55"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="interests-section">
+        <p class="page-header-eyebrow">Beyond the screen</p>
+        <div class="interests-row">
+          <div class="interest-card" data-delay="0">
+            <div class="icon">⚽</div>
+            <p>Soccer</p>
+          </div>
+          <div class="interest-card" data-delay="100">
+            <div class="icon">🏓</div>
+            <p>Table Tennis</p>
+          </div>
+          <div class="interest-card" data-delay="200">
+            <div class="icon">🖥️</div>
+            <p>Tech & Innovation</p>
+          </div>
+          <div class="interest-card" data-delay="300">
+            <div class="icon">🎓</div>
+            <p>Perth Modern</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: PROJECTS ── -->
+  <section id="page-projects" class="page">
+    <div class="page-inner">
+      <div class="page-header">
+        <p class="page-header-eyebrow">What I've built</p>
+        <h2>My<br>Projects</h2>
+        <p>A collection of things I've made — from code experiments to 3D creations. Always making more!</p>
+      </div>
+
+      <div class="projects-grid">
+        <div class="project-card" data-delay="0">
+          <div class="project-thumb" style="background: linear-gradient(135deg, #d8f3dc, #b7e4c7);">
+            🌐
+          </div>
+          <div class="project-body">
+            <p class="project-type">Web Development</p>
+            <h3>This Website</h3>
+            <p>My personal portfolio site built with HTML, CSS, and JavaScript. Features smooth animations, custom cursor, and multiple pages.</p>
+            <div class="project-tags">
+              <span class="project-tag">HTML</span>
+              <span class="project-tag">CSS</span>
+              <span class="project-tag">JavaScript</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-delay="100">
+          <div class="project-thumb" style="background: linear-gradient(135deg, #cce5ff, #b6d4fe);">
+            🎮
+          </div>
+          <div class="project-body">
+            <p class="project-type">Game / Interactive</p>
+            <h3>Scratch Game</h3>
+            <p>An interactive game built in Scratch with custom sprites, scoring system, and multiple difficulty levels.</p>
+            <div class="project-tags">
+              <span class="project-tag">Scratch</span>
+              <span class="project-tag">Game Design</span>
+              <span class="project-tag">Animation</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-delay="200">
+          <div class="project-thumb" style="background: linear-gradient(135deg, #fde8d8, #fcd5b5);">
+            🧊
+          </div>
+          <div class="project-body">
+            <p class="project-type">3D Modelling</p>
+            <h3>Blender Scene</h3>
+            <p>A 3D rendered scene created in Blender with custom lighting, textures and materials. My first complete 3D render.</p>
+            <div class="project-tags">
+              <span class="project-tag">Blender</span>
+              <span class="project-tag">3D Art</span>
+              <span class="project-tag">Rendering</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-delay="300">
+          <div class="project-thumb" style="background: linear-gradient(135deg, #e9d8fd, #d0bfff);">
+            🐍
+          </div>
+          <div class="project-body">
+            <p class="project-type">Coding</p>
+            <h3>Python Project</h3>
+            <p>A Python program I built to practise coding logic — coming soon with more details as I continue learning!</p>
+            <div class="project-tags">
+              <span class="project-tag">Python</span>
+              <span class="project-tag">In Progress</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Made with care by Harry &nbsp;·&nbsp; Perth Modern School &nbsp;·&nbsp; 2025</p>
+  </footer>
+
+  <script>
+    // ── Custom cursor ──
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    function animCursor() {
+      cursor.style.left = mx + 'px';
+      cursor.style.top  = my + 'px';
+      rx += (mx - rx) * 0.14;
+      ry += (my - ry) * 0.14;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      requestAnimationFrame(animCursor);
+    }
+    animCursor();
+
+    // ── Page switching ──
+    function showPage(name) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const target = document.getElementById('page-' + name);
+      target.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Trigger scroll animations
+      setTimeout(triggerVisible, 100);
+      // Animate skill bars
+      if (name === 'skills') {
+        setTimeout(animateBars, 300);
+      }
+    }
+
+    // ── Intersection / visibility animations ──
+    function triggerVisible() {
+      const els = document.querySelectorAll('.skill-category, .interest-card, .project-card');
+      els.forEach((el, i) => {
+        const delay = parseInt(el.dataset.delay || 0);
+        setTimeout(() => el.classList.add('visible'), delay);
+      });
+    }
+
+    // ── Skill bar animation ──
+    function animateBars() {
+      document.querySelectorAll('.skill-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width + '%';
+      });
+    }
+
+    // ── Nav link click (prevent default) ──
+    document.querySelectorAll('.nav-links a, .nav-logo').forEach(a => {
+      a.addEventListener('click', e => e.preventDefault());
+    });
+
+    // ── Initial trigger for about page ──
+    setTimeout(triggerVisible, 500);
+  </script>
 </body>
 </html>
