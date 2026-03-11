@@ -1,10 +1,93 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>KonfusionKing</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KonfusionKing</title>
+<style>
+  /* Reset and basic styles */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #0b0b2a;
+    color: #fff;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* Rocket animation */
+  #rocket {
+    position: absolute;
+    width: 100px;
+    top: 50%;
+    left: -120px;
+    transform: translateY(-50%);
+    animation: fly 3s ease-out forwards;
+  }
+
+  @keyframes fly {
+    0% { left: -120px; transform: translateY(-50%) rotate(-20deg); }
+    50% { left: 50%; transform: translateY(-50%) rotate(0deg); }
+    100% { left: 120%; transform: translateY(-50%) rotate(20deg); }
+  }
+
+  /* Text container */
+  #content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 2s ease 3s forwards; /* starts after rocket */
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    color: #f0e130;
+    text-shadow: 2px 2px 5px #000;
+  }
+
+  p {
+    font-size: 1.2em;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.5;
+    color: #c0c0ff;
+  }
+
+  /* Stars background */
+  body::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: transparent url('https://i.ibb.co/fx5FQbB/stars.png') repeat;
+    animation: moveStars 60s linear infinite;
+    z-index: -1;
+  }
+
+  @keyframes moveStars {
+    from { transform: translate(0, 0); }
+    to { transform: translate(-50%, -50%); }
+  }
+</style>
 </head>
 <body>
-  <h1>Welcome to KonfusionKing!</h1>
-  <p>This is my first website hosted on GitHub Pages.</p>
+
+<!-- Rocket -->
+<img id="rocket" src="https://i.ibb.co/qyFfY8k/rocket.png" alt="Rocket">
+
+<!-- Main Content -->
+<div id="content">
+  <h1>Welcome to KonfusionKing</h1>
+  <p>Step into the konfusing world of kode, kreativity, and kuriosity. Explore, create, and let your imagination launch like a rocket!</p>
+</div>
+
 </body>
 </html>
